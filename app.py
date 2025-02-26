@@ -38,15 +38,16 @@ if st.button("查询"):
                 pages = result["Response"]["Pages"]
                 for page in pages:
                     page_data = json.loads(page)  # 解析每个页面的 JSON 数据
-                    st.card(
-                        title=page_data["title"],
-                        content=page_data["passage"],
-                        date=page_data["date"],
-                        site=page_data["site"],
-                        url=page_data["url"],
-                        image=page_data.get("images", [None])[0]  # 获取第一张图片
-                    )
-                    st.markdown(f"[查看详情]({page_data['url']})")  # 添加链接
+                    
+                    # 创建卡片样式
+                    st.markdown(f"""
+                    <div style="border: 1px solid #e0e0e0; border-radius: 5px; padding: 10px; margin: 10px 0;">
+                        <h4>{page_data['title']}</h4>
+                        <p>{page_data['passage']}</p>
+                        <p><strong>来源:</strong> {page_data['site']} | <strong>日期:</strong> {page_data['date']}</p>
+                        <a href="{page_data['url']}" target="_blank">查看详情</a>
+                    </div>
+                    """, unsafe_allow_html=True)
 
             else:
                 st.warning("没有找到相关结果。")
