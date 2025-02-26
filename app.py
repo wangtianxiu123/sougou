@@ -20,10 +20,13 @@ query = st.text_input("请输入搜索内容:")
 # 用户输入分值限制
 score_limit = st.number_input("请输入分值限制:", min_value=0.0, format="%.2f")
 
-def highlight_keywords(text, keywords):
+def highlight_keywords(text, keyword):
     """高亮显示关键词"""
-    for keyword in keywords:
-        text = text.replace(keyword, f'<span style="color:red;">{keyword}</span>')
+    if keyword:
+        # 使用正则表达式替换关键词，确保大小写不敏感
+        import re
+        pattern = re.compile(re.escape(keyword), re.IGNORECASE)
+        text = pattern.sub(f'<span style="color:red;">{keyword}</span>', text)
     return text
 
 if st.button("查询"):
@@ -62,8 +65,8 @@ if st.button("查询"):
                 # 显示过滤后的结果
                 for page_data in filtered_results:
                     # 高亮显示关键词
-                    highlighted_title = highlight_keywords(page_data['title'], [query])
-                    highlighted_passage = highlight_keywords(page_data['passage'], [query])
+                    highlighted_title = highlight_keywords(page_data['title'], query)
+                    highlighted_passage = highlight_keywords(page_data['passage'], query)
 
                     # 创建卡片样式
                     st.markdown(f"""
