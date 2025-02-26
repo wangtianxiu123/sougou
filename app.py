@@ -71,16 +71,25 @@ if st.button("查询"):
 
                 # 显示过滤后的结果
                 for page_data in filtered_results:
-                    # 创建卡片样式
-                    images = page_data.get("images", [])
-                    cover_image = images[0] if images else default_cover_image  # 获取第一张图像，如果没有则使用默认图像
-                    favicon = page_data.get("favicon", default_favicon)  # 获取图标，如果没有则使用默认图标
-
-                    # 检查字段是否存在
-                    title = page_data.get('title', '无标题')
-                    passage = page_data.get('passage', '无内容')
-                    site = page_data.get('site', '未知来源')
-                    date = page_data.get('date', '未知日期')
+                    # 检查 vr 字段
+                    if page_data.get("vr", False):
+                        # 使用 vr 格式渲染
+                        vr_data = page_data.get("kdJsonStr", {}).get("module_list", [{}])[0].get("item_list", [{}])[0].get("data", {})
+                        title = vr_data.get("title", "无标题")
+                        passage = vr_data.get("dynAbstract", "无内容")
+                        cover_image = vr_data.get("oriPicList", [default_cover_image])[0]  # 获取第一张图像，如果没有则使用默认图像
+                        favicon = page_data.get("favicon", default_favicon)  # 获取图标，如果没有则使用默认图标
+                        url = vr_data.get("baikeURL", ["#"])[0]  # 获取链接，如果没有则使用 #
+                    else:
+                        # 使用原来的格式渲染
+                        images = page_data.get("images", [])
+                        cover_image = images[0] if images else default_cover_image  # 获取第一张图像，如果没有则使用默认图像
+                        favicon = page_data.get("favicon", default_favicon)  # 获取图标，如果没有则使用默认图标
+                        title = page_data.get('title', '无标题')
+                        passage = page_data.get('passage', '无内容')
+                        site = page_data.get('site', '未知来源')
+                        date = page_data.get('date', '未知日期')
+                        url = page_data.get('url', '#')  # 获取链接，如果没有则使用 #
 
                     # 使用 HTML 渲染卡片
                     st.markdown(f"""
@@ -88,9 +97,9 @@ if st.button("查询"):
                         <img src="{cover_image}" style="width:100%; height:auto; border-radius:5px;" />
                         <h4>{title}</h4>
                         <p>{passage}</p>
-                        <p><strong>来源:</strong> {site} | <strong>日期:</strong> {date} | <strong>分值:</strong> {score}</p>
+                        <p><strong>来源:</strong> {site if not page_data.get("vr", False) else '未知来源'} | <strong>日期:</strong> {date if not page_data.get("vr", False) else '未知日期'} | <strong>分值:</strong> {score}</p>
                         <img src="{favicon}" style="width:20px; height:20px;" />
-                        <a href="{page_data['url']}" target="_blank">查看详情</a>
+                        <a href="{url}" target="_blank">查看详情</a>
                     </div>
                     """, unsafe_allow_html=True)
 
