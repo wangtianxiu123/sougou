@@ -68,8 +68,8 @@ if st.button("查询"):
                 # 显示过滤后的结果
                 for page_data in filtered_results:
                     # 创建卡片样式
-                    cover_image = page_data.get("cover", None)  # 获取封面图像
-                    icon = page_data.get("icon", None)  # 获取图标
+                    cover_image = page_data.get("images", [None])[0]  # 获取第一张图像
+                    favicon = page_data.get("favicon", None)  # 获取图标
 
                     st.markdown(f"""
                     <div style="border: 1px solid #e0e0e0; border-radius: 5px; padding: 10px; margin: 10px 0;">
@@ -77,7 +77,7 @@ if st.button("查询"):
                         <h4>{page_data['title']}</h4>
                         <p>{page_data['passage']}</p>
                         <p><strong>来源:</strong> {page_data['site']} | <strong>日期:</strong> {page_data['date']} | <strong>分值:</strong> {score}</p>
-                        {f'<img src="{icon}" style="width:20px; height:20px;" />' if icon else ''}
+                        {f'<img src="{favicon}" style="width:20px; height:20px;" />' if favicon else ''}
                         <a href="{page_data['url']}" target="_blank">查看详情</a>
                     </div>
                     """, unsafe_allow_html=True)
