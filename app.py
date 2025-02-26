@@ -72,6 +72,7 @@ if st.button("查询"):
                     cover_image = images[0] if images else None  # 获取第一张图像，如果没有则为 None
                     favicon = page_data.get("favicon", None)  # 获取图标
 
+                    # 使用 HTML 渲染卡片
                     st.markdown(f"""
                     <div style="border: 1px solid #e0e0e0; border-radius: 5px; padding: 10px; margin: 10px 0;">
                         {f'<img src="{cover_image}" style="width:100%; height:auto; border-radius:5px;" />' if cover_image else ''}
