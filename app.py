@@ -20,6 +20,11 @@ query = st.text_input("请输入搜索内容:")
 # 用户输入分值限制
 score_limit = st.number_input("请输入分值限制:", min_value=0.0, format="%.2f")
 
+# 用户输入其他参数
+param1 = st.text_input("请输入参数1:")  # 根据API文档添加更多参数
+param2 = st.text_input("请输入参数2:")  # 根据API文档添加更多参数
+param3 = st.text_input("请输入参数3:")  # 根据API文档添加更多参数
+
 def highlight_keywords(text, keyword):
     """高亮显示关键词"""
     if keyword:
@@ -40,9 +45,15 @@ if st.button("查询"):
             clientProfile = ClientProfile()
             clientProfile.httpProfile = httpProfile
 
-            params = json.dumps({"Query": query})
+            # 构建请求参数
+            params = {
+                "Query": query,
+                "Param1": param1,  # 根据API文档添加更多参数
+                "Param2": param2,  # 根据API文档添加更多参数
+                "Param3": param3   # 根据API文档添加更多参数
+            }
             common_client = CommonClient("tms", "2020-12-29", cred, "", profile=clientProfile)
-            result = common_client.call_json("SearchPro", json.loads(params))
+            result = common_client.call_json("SearchPro", params)
 
             # 显示结果
             st.subheader("API 返回结果:")
