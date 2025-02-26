@@ -34,12 +34,22 @@ if st.button("查询"):
 
             # 显示结果
             st.subheader("API 返回结果:")
-            st.json(result)  # 以 JSON 格式展示 API 返回结果
+            if "Response" in result and "Pages" in result["Response"]:
+                pages = result["Response"]["Pages"]
+                for page in pages:
+                    page_data = json.loads(page)  # 解析每个页面的 JSON 数据
+                    st.card(
+                        title=page_data["title"],
+                        content=page_data["passage"],
+                        date=page_data["date"],
+                        site=page_data["site"],
+                        url=page_data["url"],
+                        image=page_data.get("images", [None])[0]  # 获取第一张图片
+                    )
+                    st.markdown(f"[查看详情]({page_data['url']})")  # 添加链接
 
-            # 自定义展示效果
-            st.subheader("展示效果:")
-            st.write(f"您搜索的内容是: **{query}**")
-            # 这里可以添加更多的展示效果
+            else:
+                st.warning("没有找到相关结果。")
 
         except TencentCloudSDKException as err:
             st.error(f"发生错误: {err}")
