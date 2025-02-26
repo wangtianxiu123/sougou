@@ -68,7 +68,8 @@ if st.button("查询"):
                 # 显示过滤后的结果
                 for page_data in filtered_results:
                     # 创建卡片样式
-                    cover_image = page_data.get("images", [None])[0]  # 获取第一张图像
+                    images = page_data.get("images", [])
+                    cover_image = images[0] if images else None  # 获取第一张图像，如果没有则为 None
                     favicon = page_data.get("favicon", None)  # 获取图标
 
                     st.markdown(f"""
