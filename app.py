@@ -29,6 +29,10 @@ from_time = st.number_input("请输入起始时间（时间戳，0表示当前�
 # 用户输入分值限制
 score_limit = st.number_input("请输入分值限制:", min_value=0.0, format="%.2f")
 
+# 默认图像
+default_cover_image = "https://via.placeholder.com/400x200.png?text=No+Image"  # 默认封面图像
+default_favicon = "https://via.placeholder.com/20.png?text=Favicon"  # 默认图标
+
 if st.button("查询"):
     if secret_id and secret_key and query:
         try:
@@ -69,17 +73,17 @@ if st.button("查询"):
                 for page_data in filtered_results:
                     # 创建卡片样式
                     images = page_data.get("images", [])
-                    cover_image = images[0] if images else None  # 获取第一张图像，如果没有则为 None
-                    favicon = page_data.get("favicon", None)  # 获取图标
+                    cover_image = images[0] if images else default_cover_image  # 获取第一张图像，如果没有则使用默认图像
+                    favicon = page_data.get("favicon", default_favicon)  # 获取图标，如果没有则使用默认图标
 
                     # 使用 HTML 渲染卡片
                     st.markdown(f"""
                     <div style="border: 1px solid #e0e0e0; border-radius: 5px; padding: 10px; margin: 10px 0;">
-                        {f'<img src="{cover_image}" style="width:100%; height:auto; border-radius:5px;" />' if cover_image else ''}
+                        <img src="{cover_image}" style="width:100%; height:auto; border-radius:5px;" />
                         <h4>{page_data['title']}</h4>
                         <p>{page_data['passage']}</p>
                         <p><strong>来源:</strong> {page_data['site']} | <strong>日期:</strong> {page_data['date']} | <strong>分值:</strong> {score}</p>
-                        {f'<img src="{favicon}" style="width:20px; height:20px;" />' if favicon else ''}
+                        <img src="{favicon}" style="width:20px; height:20px;" />
                         <a href="{page_data['url']}" target="_blank">查看详情</a>
                     </div>
                     """, unsafe_allow_html=True)
