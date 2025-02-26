@@ -80,6 +80,7 @@ if st.button("查询"):
                         cover_image = vr_data.get("oriPicList", [default_cover_image])[0]  # 获取第一张图像，如果没有则使用默认图像
                         favicon = page_data.get("favicon", default_favicon)  # 获取图标，如果没有则使用默认图标
                         url = vr_data.get("baikeURL", ["#"])[0]  # 获取链接，如果没有则使用 #
+                        score = page_data.get("score", 0)  # 获取分值
                     else:
                         # 使用原来的格式渲染
                         images = page_data.get("images", [])
