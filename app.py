@@ -76,13 +76,19 @@ if st.button("查询"):
                     cover_image = images[0] if images else default_cover_image  # 获取第一张图像，如果没有则使用默认图像
                     favicon = page_data.get("favicon", default_favicon)  # 获取图标，如果没有则使用默认图标
 
+                    # 检查字段是否存在
+                    title = page_data.get('title', '无标题')
+                    passage = page_data.get('passage', '无内容')
+                    site = page_data.get('site', '未知来源')
+                    date = page_data.get('date', '未知日期')
+
                     # 使用 HTML 渲染卡片
                     st.markdown(f"""
                     <div style="border: 1px solid #e0e0e0; border-radius: 5px; padding: 10px; margin: 10px 0;">
                         <img src="{cover_image}" style="width:100%; height:auto; border-radius:5px;" />
-                        <h4>{page_data['title']}</h4>
-                        <p>{page_data['passage']}</p>
-                        <p><strong>来源:</strong> {page_data['site']} | <strong>日期:</strong> {page_data['date']} | <strong>分值:</strong> {score}</p>
+                        <h4>{title}</h4>
+                        <p>{passage}</p>
+                        <p><strong>来源:</strong> {site} | <strong>日期:</strong> {date} | <strong>分值:</strong> {score}</p>
                         <img src="{favicon}" style="width:20px; height:20px;" />
                         <a href="{page_data['url']}" target="_blank">查看详情</a>
                     </div>
