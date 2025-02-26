@@ -54,61 +54,9 @@ if st.button("查询"):
             common_client = CommonClient("tms", "2020-12-29", cred, "", profile=clientProfile)
             result = common_client.call_json("SearchPro", params)
 
-            # 显示结果
+            # 显示 API 返回结果
             st.subheader("API 返回结果:")
             st.json(result)  # 显示原始 API 返回内容
-
-            if "Response" in result and "Pages" in result["Response"]:
-                pages = result["Response"]["Pages"]
-                filtered_results = []
-
-                # 过滤和排序结果
-                for page in pages:
-                    page_data = json.loads(page)  # 解析每个页面的 JSON 数据
-                    score = page_data.get("score", 0)  # 获取分值
-                    if score >= score_limit:  # 过滤分值
-                        filtered_results.append(page_data)
-
-                # 显示过滤后的结果
-                for page_data in filtered_results:
-                    # 检查 vr 字段
-                    if page_data.get("vr", False):
-                        # 使用 vr 格式渲染
-                        vr_data = page_data.get("kdJsonStr", {}).get("module_list", [{}])[0].get("item_list", [{}])[0].get("data", {})
-                        title = vr_data.get("title", "无标题")
-                        passage = vr_data.get("dynAbstract", "无内容")
-                        cover_image = vr_data.get("oriPicList", [default_cover_image])[0]  # 获取第一张图像，如果没有则使用默认图像
-                        favicon = page_data.get("favicon", default_favicon)  # 获取图标，如果没有则使用默认图标
-                        url = vr_data.get("baikeURL", ["#"])[0]  # 获取链接，如果没有则使用 #
-                        score = page_data.get("score", 0)  # 获取分值
-                    else:
-                        # 使用原来的格式渲染
-                        images = page_data.get("images", [])
-                        cover_image = images[0] if images else default_cover_image  # 获取第一张图像，如果没有则使用默认图像
-                        favicon = page_data.get("favicon", default_favicon)  # 获取图标，如果没有则使用默认图标
-                        title = page_data.get('title', '无标题')
-                        passage = page_data.get('passage', '无内容')
-                        site = page_data.get('site', '未知来源')
-                        date = page_data.get('date', '未知日期')
-                        url = page_data.get('url', '#')  # 获取链接，如果没有则使用 #
-
-                    # 使用 HTML 渲染卡片
-                    st.markdown(f"""
-                    <div style="border: 1px solid #e0e0e0; border-radius: 5px; padding: 10px; margin: 10px 0;">
-                        <img src="{cover_image}" style="width:100%; height:auto; border-radius:5px;" />
-                        <h4>{title}</h4>
-                        <p>{passage}</p>
-                        <p><strong>来源:</strong> {site if not page_data.get("vr", False) else '未知来源'} | <strong>日期:</strong> {date if not page_data.get("vr", False) else '未知日期'} | <strong>分值:</strong> {score}</p>
-                        <img src="{favicon}" style="width:20px; height:20px;" />
-                        <a href="{url}" target="_blank">查看详情</a>
-                    </div>
-                    """, unsafe_allow_html=True)
-
-                if not filtered_results:
-                    st.warning("没有找到符合分值限制的结果。")
-
-            else:
-                st.warning("没有找到相关结果。")
 
         except TencentCloudSDKException as err:
             st.error(f"发生错误: {err}")
