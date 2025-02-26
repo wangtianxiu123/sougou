@@ -113,4 +113,4 @@ if st.button("查询"):
         except TencentCloudSDKException as err:
             st.error(f"发生错误: {err}")
     else:
-        st.warning("请确保输入了 SecretId、SecretKey 和搜索内容！") 
+        st.warning("请确保输入了 SecretId、SecretKey 和搜索内容！")
