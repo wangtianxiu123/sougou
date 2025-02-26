@@ -34,6 +34,8 @@ if st.button("查询"):
 
             # 显示结果
             st.subheader("API 返回结果:")
+            st.json(result)  # 显示原始 API 返回内容
+
             if "Response" in result and "Pages" in result["Response"]:
                 pages = result["Response"]["Pages"]
                 for page in pages:
